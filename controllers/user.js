@@ -27,7 +27,6 @@ export const signin = async (req, res) => {
 
     catch (error) {
         res.status(500).json({ message: "Something went wrong!" });
-        console.log(error);
     }
 };
 
@@ -56,7 +55,6 @@ export const signup = async (req, res) => {
 
     catch (error) {
         res.status(500).json({ message: "Something went wrong!" });
-        console.log(error);
     }
 };
 
@@ -81,6 +79,22 @@ export const googleSignIn = async (req, res) => {
 
     catch (error) {
         res.status(500).json({ message: "Something went wrong!" });
-        console.log(error);
     }
+};
+
+export const makeAdmin = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const filter = { email: email }
+        const updateDoc = { $set: { role: "admin" } };
+        const result = await userModal.updateOne(filter, updateDoc);
+        res.status(200).json(result);
+    }
+
+    catch (error) {
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+
+
 };
