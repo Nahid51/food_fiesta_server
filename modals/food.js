@@ -3,14 +3,15 @@ import mongoose from "mongoose";
 const foodSchema = mongoose.Schema({
     title: String,
     price: Number,
-    image: String,
+    imageFile: String,
     category: String,
     desc: String,
+    creator: String,
     createdAt: {
         type: Date,
         default: new Date(),
     }
-})
+});
 
 const foodModel = mongoose.model("Food", foodSchema);
 

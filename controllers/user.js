@@ -86,7 +86,6 @@ export const makeAdmin = async (req, res) => {
     const { email } = req.body;
 
     try {
-
         const oldUser = await userModal.findOne({ email });
         if (!oldUser) {
             return res.status(500).json({ message: `No user exist with email: ${email}` });

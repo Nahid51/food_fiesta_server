@@ -1,10 +1,11 @@
 import foodModel from "../modals/food.js";
 
-export const createFood = async (req, res) => {
+export const addFood = async (req, res) => {
     const food = req.body;
     const newFood = new foodModel({
         ...food,
-        createdAt: new Date().toISOString()
+        creator: req.userId,
+        createdAt: new Date().toISOString(),
     });
 
     try {
