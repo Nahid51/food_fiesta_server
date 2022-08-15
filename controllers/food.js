@@ -10,7 +10,7 @@ export const addFood = async (req, res) => {
 
     try {
         await newFood.save();
-        res.statue(201).json(newFood);
+        res.status(201).json(newFood);
     }
     catch (error) {
         res.status(404).json({ message: "Something went wrong!" });
