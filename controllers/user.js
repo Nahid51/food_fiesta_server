@@ -5,35 +5,10 @@ import userModal from "../modals/user.js";
 
 const secret = "test";
 
-export const signin = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const oldUser = await userModal.findOne({ email });
-        if (!oldUser)
-            return res.status(404).json({ message: "User doesn't exists!" });
-
-        const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
-
-        if (!isPasswordCorrect)
-            return res.status(400).json({ message: "Invalid credentials!" });
-
-        const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-            expiresIn: "1h",
-        });
-
-        res.status(200).json({ result: oldUser, token });
-    }
-
-    catch (error) {
-        res.status(500).json({ message: "Something went wrong!" });
-    }
-};
-
 export const signup = async (req, res) => {
     const { email, password, name } = req.body;
     try {
-        const oldUser = await userModal.findOne({ email });
+        const oldUser = await userModal.findOne({ email: email });
 
         if (oldUser) {
             return res.status(400).json({ message: "User already exists!" });
@@ -58,23 +33,24 @@ export const signup = async (req, res) => {
     }
 };
 
-export const googleSignIn = async (req, res) => {
-    const { email, name, token, googleId } = req.body;
+export const signin = async (req, res) => {
+    const { email, password } = req.body;
 
     try {
-        const oldUser = await userModal.findOne({ email });
-        if (oldUser) {
-            const result = { _id: oldUser._id.toString(), email, name };
-            return res.status(200).json({ result, token });
-        }
+        const oldUser = await userModal.findOne({ email: email });
+        if (!oldUser)
+            return res.status(404).json({ message: "User doesn't exists!" });
 
-        const result = await userModal.create({
-            email,
-            name,
-            googleId,
+        const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
+
+        if (!isPasswordCorrect)
+            return res.status(400).json({ message: "Invalid credentials!" });
+
+        const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
+            expiresIn: "1h",
         });
 
-        res.status(200).json({ result, token });
+        res.status(200).json({ result: oldUser, token });
     }
 
     catch (error) {
@@ -82,11 +58,41 @@ export const googleSignIn = async (req, res) => {
     }
 };
 
+export const googleSignIn = async (req, res) => {
+
+    const { email, name, token, googleId } = req.body;
+
+    try {
+        const oldUser = await userModal.findOne({ email: email });
+
+        if (!oldUser) {
+            const newUser = await userModal.create({
+                email: email,
+                name: name,
+                googleId: googleId
+            });
+            res.status(201).json({ result: newUser, token });
+        }
+
+        else {
+            console.log("oldUser", oldUser);
+            return res.status(200).json({ result: oldUser, token });
+        }
+
+    }
+
+    catch (error) {
+        res.status(500).json({ message: "Something went wrong!" });
+    }
+};
+
+
 export const makeAdmin = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const oldUser = await userModal.findOne({ email });
+        const oldUser = await userModal.findOne({ email: email });
+        console.log(oldUser);
         if (!oldUser) {
             return res.status(500).json({ message: `No user exist with email: ${email}` });
         }
@@ -94,10 +100,10 @@ export const makeAdmin = async (req, res) => {
         const updateDoc = { $set: { role: "admin" } };
         const result = await userModal.updateOne(filter, updateDoc);
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({ oldUser, result });
     }
 
     catch (error) {
-        res.status(500).json({ message: "Something went wrong!" });
+        console.log(error);
     }
 };
