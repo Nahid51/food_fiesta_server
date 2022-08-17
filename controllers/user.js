@@ -75,10 +75,8 @@ export const googleSignIn = async (req, res) => {
         }
 
         else {
-            console.log("oldUser", oldUser);
             return res.status(200).json({ result: oldUser, token });
         }
-
     }
 
     catch (error) {

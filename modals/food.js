@@ -6,7 +6,6 @@ const foodSchema = mongoose.Schema({
     imageFile: String,
     category: String,
     desc: String,
-    email: String,
     creator: String,
     createdAt: {
         type: Date,
