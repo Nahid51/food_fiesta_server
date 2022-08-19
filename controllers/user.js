@@ -90,14 +90,13 @@ export const makeAdmin = async (req, res) => {
 
     try {
         const oldUser = await userModal.findOne({ email: email });
-        console.log(oldUser);
+
         if (!oldUser) {
             return res.status(500).json({ message: `No user exist with email: ${email}` });
         }
         const filter = { email: email }
         const updateDoc = { $set: { role: "admin" } };
         const result = await userModal.updateOne(filter, updateDoc);
-        console.log(result);
         res.status(200).json({ oldUser, result });
     }
 
