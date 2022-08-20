@@ -49,7 +49,7 @@ export const deleteFood = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).json({ message: `No tour exist with id: ${id}` });
+            return res.status(404).json({ message: `No Food exist with id: ${id}` });
         }
 
         await foodModal.findByIdAndRemove(id);
@@ -68,7 +68,7 @@ export const updateFood = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).json({ message: `No tour exist with id: ${id}` });
+            return res.status(404).json({ message: `No Food exist with id: ${id}` });
         }
 
         const updatedFood = {
@@ -87,4 +87,27 @@ export const updateFood = async (req, res) => {
     catch (error) {
         res.status(404).json({ message: "Something went wrong" });
     }
+};
+
+
+export const reviewFood = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(404).json({ message: `No Food exist with id: ${id}` });
+        }
+
+        const foodReview = {
+            review: req.body
+        }
+        const updateDoc = { $push: foodReview };
+        await foodModal.findByIdAndUpdate(id, updateDoc, { new: true });
+        res.json(foodReview);
+    }
+
+    catch (error) {
+        res.status(404).json({ message: "Something went wrong" });
+    }
+
 };
