@@ -7,7 +7,7 @@ const foodSchema = mongoose.Schema({
     category: String,
     desc: String,
     creator: String,
-    review: [Array],
+    review: Array,
     createdAt: {
         type: Date,
         default: new Date(),

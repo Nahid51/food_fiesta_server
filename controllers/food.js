@@ -111,3 +111,18 @@ export const reviewFood = async (req, res) => {
     }
 
 };
+
+
+export const getReviewsByFood = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const foodReviews = await foodModal.find({ _id: id });
+        res.status(200).json(foodReviews);
+    }
+
+    catch (error) {
+        res.status(404).json({ message: "Something went wrong!" });
+    }
+
+};
