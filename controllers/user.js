@@ -1,14 +1,14 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import userModal from "../modals/user.js";
+import userModel from "../models/user.js";
 
-const secret = "test";
+const secret = "testPurpose";
 
 export const signup = async (req, res) => {
     const { email, password, name } = req.body;
     try {
-        const oldUser = await userModal.findOne({ email: email });
+        const oldUser = await userModel.findOne({ email: email });
 
         if (oldUser) {
             return res.status(400).json({ message: "User already exists!" });
@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
 
         const hashPassword = await bcrypt.hash(password, 12);
 
-        const result = await userModal.create({
+        const result = await userModel.create({
             email,
             password: hashPassword,
             name: name,
@@ -37,7 +37,7 @@ export const signin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const oldUser = await userModal.findOne({ email: email });
+        const oldUser = await userModel.findOne({ email: email });
         if (!oldUser)
             return res.status(404).json({ message: "User doesn't exists!" });
 
@@ -63,10 +63,10 @@ export const googleSignIn = async (req, res) => {
     const { email, name, token, googleId } = req.body;
 
     try {
-        const oldUser = await userModal.findOne({ email: email });
+        const oldUser = await userModel.findOne({ email: email });
 
         if (!oldUser) {
-            const newUser = await userModal.create({
+            const newUser = await userModel.create({
                 email: email,
                 name: name,
                 googleId: googleId
@@ -89,14 +89,14 @@ export const makeAdmin = async (req, res) => {
     const { email } = req.body;
 
     try {
-        const oldUser = await userModal.findOne({ email: email });
+        const oldUser = await userModel.findOne({ email: email });
 
         if (!oldUser) {
             return res.status(500).json({ message: `No user exist with email: ${email}` });
         }
         const filter = { email: email }
         const updateDoc = { $set: { role: "admin" } };
-        const result = await userModal.updateOne(filter, updateDoc);
+        const result = await userModel.updateOne(filter, updateDoc);
         res.status(200).json({ oldUser, result });
     }
 

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import SSLCommerzPayment from "sslcommerz";
 import { v4 as uuidv4 } from 'uuid';
-import paymentModal from "../modals/payment.js";
+import paymentModel from "../models/payment.js";
 
 export const getDataForSSL = async (req, res) => {
     console.log(req.body);
@@ -11,7 +11,7 @@ export const getDataForSSL = async (req, res) => {
         tran_id: uuidv4(),
         success_url: 'http://localhost:5000/payment/success',
         fail_url: 'http://localhost:5000/payment/fail',
-        cancel_url: 'http://localhost:5000/payment/fail',
+        cancel_url: 'http://localhost:5000/payment/cancel',
         ipn_url: 'http://localhost:5000/payment/ipn',
         shipping_method: 'Courier',
         number_of_item: req?.body?.totalQuantity,
@@ -34,7 +34,7 @@ export const getDataForSSL = async (req, res) => {
     };
 
     if (data) {
-        const newPayment = new paymentModal({
+        const newPayment = new paymentModel({
             ...data,
             createdAt: new Date().toISOString(),
         });
@@ -61,7 +61,7 @@ export const successMsg = async (req, res) => {
     const updateDoc = {
         val_id: val_id
     }
-    await paymentModal.updateOne(filter, updateDoc);
+    await paymentModel.updateOne(filter, updateDoc);
 
     res.status(200).redirect(`http://localhost:3000/payment/success/${tran_id}`);
 };
@@ -70,7 +70,7 @@ export const failMsg = async (req, res) => {
     const { tran_id } = req.body;
 
     const query = { tran_id: tran_id };
-    await paymentModal.deleteOne(query);
+    await paymentModel.deleteOne(query);
 
     res.status(400).redirect('http://localhost:3000/payment/fail');
 };
@@ -79,7 +79,7 @@ export const cancelMsg = async (req, res) => {
     const { tran_id } = req.body;
 
     const query = { tran_id: tran_id };
-    await paymentModal.deleteOne(query);
+    await paymentModel.deleteOne(query);
 
     res.status(400).redirect('http://localhost:3000/home');
 };

@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import foodModal from "../modals/food.js";
+import foodModel from "../models/food.js";
 
 export const addFood = async (req, res) => {
     const food = req.body;
-    const newFood = new foodModal({
+    const newFood = new foodModel({
         ...food,
         createdAt: new Date().toISOString(),
     });
@@ -20,7 +20,7 @@ export const addFood = async (req, res) => {
 
 export const getFoods = async (req, res) => {
     try {
-        const foods = await foodModal.find();
+        const foods = await foodModel.find();
         res.status(200).json(foods);
     }
     catch (error) {
@@ -33,7 +33,7 @@ export const getFoodsByUser = async (req, res) => {
     const { email } = req.params;
 
     try {
-        const userFoods = await foodModal.find({ creator: email });
+        const userFoods = await foodModel.find({ creator: email });
         res.status(200).json(userFoods);
     }
 
@@ -52,7 +52,7 @@ export const deleteFood = async (req, res) => {
             return res.status(404).json({ message: `No Food exist with id: ${id}` });
         }
 
-        await foodModal.findByIdAndRemove(id);
+        await foodModel.findByIdAndRemove(id);
         res.json({ message: "Tour deleted successfully" });
     }
 
@@ -80,7 +80,7 @@ export const updateFood = async (req, res) => {
             price,
             _id: id,
         };
-        await foodModal.findByIdAndUpdate(id, updatedFood, { new: true });
+        await foodModel.findByIdAndUpdate(id, updatedFood, { new: true });
         res.json(updatedFood);
     }
 
@@ -102,7 +102,7 @@ export const reviewFood = async (req, res) => {
             review: req.body
         }
         const updateDoc = { $push: foodReview };
-        await foodModal.findByIdAndUpdate(id, updateDoc, { new: true });
+        await foodModel.findByIdAndUpdate(id, updateDoc, { new: true });
         res.json(foodReview);
     }
 
@@ -117,7 +117,7 @@ export const getReviewsByFood = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const foodReviews = await foodModal.find({ _id: id });
+        const foodReviews = await foodModel.find({ _id: id });
         res.status(200).json(foodReviews);
     }
 
