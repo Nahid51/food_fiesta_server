@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import paymentModel from "../models/payment.js";
 
 export const getDataForSSL = async (req, res) => {
-    console.log(req.body);
     const data = {
         total_amount: req?.body?.totalAmount,
         currency: 'BDT',
