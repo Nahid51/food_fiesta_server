@@ -8,10 +8,10 @@ export const getDataForSSL = async (req, res) => {
         total_amount: req?.body?.totalAmount,
         currency: 'BDT',
         tran_id: uuidv4(),
-        success_url: 'http://localhost:5000/payment/success',
-        fail_url: 'http://localhost:5000/payment/fail',
-        cancel_url: 'http://localhost:5000/payment/cancel',
-        ipn_url: 'http://localhost:5000/payment/ipn',
+        success_url: 'https://pacific-falls-28087.herokuapp.com/payment/success',
+        fail_url: 'https://pacific-falls-28087.herokuapp.com/payment/fail',
+        cancel_url: 'https://pacific-falls-28087.herokuapp.com/payment/cancel',
+        ipn_url: 'https://pacific-falls-28087.herokuapp.com/payment/ipn',
         shipping_method: 'Courier',
         number_of_item: req?.body?.totalQuantity,
         product_name: req?.body?.productDetails,
@@ -62,7 +62,7 @@ export const successMsg = async (req, res) => {
     }
     await paymentModel.updateOne(filter, updateDoc);
 
-    res.status(200).redirect(`https://food-fiesta-f118c.web.app/payment/success/${tran_id}`);
+    res.status(200).redirect(`https://food-fiesta-f118c.web.app/home/payment/success/${tran_id}`);
 };
 
 export const failMsg = async (req, res) => {
@@ -71,7 +71,7 @@ export const failMsg = async (req, res) => {
     const query = { tran_id: tran_id };
     await paymentModel.deleteOne(query);
 
-    res.status(400).redirect('https://food-fiesta-f118c.web.app/payment/fail');
+    res.status(400).redirect('https://food-fiesta-f118c.web.app/home/payment/fail');
 };
 
 export const cancelMsg = async (req, res) => {
