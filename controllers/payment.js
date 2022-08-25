@@ -62,7 +62,7 @@ export const successMsg = async (req, res) => {
     }
     await paymentModel.updateOne(filter, updateDoc);
 
-    res.status(200).redirect(`http://localhost:3000/payment/success/${tran_id}`);
+    res.status(200).redirect(`https://food-fiesta-f118c.web.app/payment/success/${tran_id}`);
 };
 
 export const failMsg = async (req, res) => {
@@ -71,7 +71,7 @@ export const failMsg = async (req, res) => {
     const query = { tran_id: tran_id };
     await paymentModel.deleteOne(query);
 
-    res.status(400).redirect('http://localhost:3000/payment/fail');
+    res.status(400).redirect('https://food-fiesta-f118c.web.app/payment/fail');
 };
 
 export const cancelMsg = async (req, res) => {
@@ -80,9 +80,9 @@ export const cancelMsg = async (req, res) => {
     const query = { tran_id: tran_id };
     await paymentModel.deleteOne(query);
 
-    res.status(400).redirect('http://localhost:3000/home');
+    res.status(400).redirect('https://food-fiesta-f118c.web.app/home');
 };
 
 export const ipnMsg = async (req, res) => {
-    res.status(400).redirect('http://localhost:3000/home');
+    res.status(400).redirect('https://food-fiesta-f118c.web.app/home');
 };
